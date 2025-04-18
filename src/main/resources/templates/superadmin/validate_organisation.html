@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valider une Organisation</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --primary-color: #3f51b5;
+      --secondary-color: #ff4081;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .page-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.5rem 0;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .card {
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 8px 8px 0 0 !important;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #303f9f;
+      border-color: #303f9f;
+    }
+    
+    .response-success {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    
+    .response-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header text-center">
+    <div class="container">
+      <h1>Plateforme de Gestion des Organisations</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="mb-0">Valider une Organisation</h2>
+          </div>
+          <div class="card-body">
+            <form id="validateOrganisationForm">
+              <div class="mb-3">
+                <label for="organisationId" class="form-label">ID de l'organisation</label>
+                <input type="text" class="form-control" id="organisationId" name="organisationId" required>
+              </div>
+              
+              <div class="mb-4">
+                <label for="jwt" class="form-label">JWT (Token SuperAdmin)</label>
+                <input type="text" class="form-control" id="jwt" name="jwt" required>
+                <div class="form-text text-muted">Veuillez saisir votre token d'authentification</div>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Valider l'organisation</button>
+                <a href="../superadmin/dashboard" class="btn btn-outline-secondary mt-2">Retour au Dashboard</a>
+              </div>
+            </form>
+            
+            <div id="responseMessage" class="mt-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.getElementById('validateOrganisationForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      
+      const organisationId = document.getElementById('organisationId').value;
+      const jwt = document.getElementById('jwt').value;
+      const responseElement = document.getElementById('responseMessage');
+      
+      // Show loading indicator
+      responseElement.innerHTML = '<div class="d-flex justify-content-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+      
+      fetch(`http://localhost:8080/api/superadmin/organisations/${organisationId}/validate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        responseElement.innerHTML = `<div class="response-success">${data.message}</div>`;
+      })
+      .catch(error => {
+        console.error('Erreur :', error);
+        responseElement.innerHTML = `<div class="response-error">Une erreur est survenue: ${error.message}</div>`;
+      });
+    });
+  </script>
+</body>
+</html>

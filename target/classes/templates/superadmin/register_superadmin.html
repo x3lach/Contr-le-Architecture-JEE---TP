@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription Super Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: #354152;
+            color: #7e8ba3;
+            font: 300 1rem/1.5 "Helvetica Neue", sans-serif;
+            margin: 0;
+            min-height: 100%;
+        }
+
+        .align {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .site__logo {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        input {
+            border: 0;
+            font: inherit;
+        }
+
+        input::placeholder {
+            color: #7e8ba3;
+        }
+
+        .form__field {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form input {
+            outline: 0;
+            padding: .5rem 1rem;
+        }
+
+        .form input[type="text"],
+        .form input[type="email"],
+        .form input[type="password"] {
+            width: 100%;
+        }
+
+        .grid {
+            margin: 0 auto;
+            max-width: 25rem;
+            width: 100%;
+        }
+
+        h2 {
+            font-size: 2.75rem;
+            font-weight: 100;
+            margin: 0 0 1rem;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        a {
+            color: #7e8ba3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .register {
+            box-shadow: 0 0 250px #000;
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: #242c37;
+            border-radius: 5px;
+        }
+
+        .register input {
+            border: 1px solid #242c37;
+            border-radius: 999px;
+            background-color: #3b4148;
+            text-align: center;
+            color: white;
+        }
+
+        .register input[type="text"],
+        .register input[type="email"],
+        .register input[type="password"] {
+            background-repeat: no-repeat;
+            background-size: 1.5rem;
+            background-position: 1rem 50%;
+            padding: 1rem 1rem 1rem 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .register input[type="text"] {
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#242c37"><path d="M256 288c79.5 0 144-64.5 144-144S335.5 0 256 0 112 64.5 112 144s64.5 144 144 144zm128 32h-55.1c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16H128C57.3 320 0 377.3 0 448v16c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48v-16c0-70.7-57.3-128-128-128z"/></svg>');
+        }
+
+        .register input[type="email"] {
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#242c37"><path d="M256.017 273.436l-205.17-170.029h410.904l-205.734 170.029zm-.034 55.462l-205.983-170.654v250.349h412v-249.94l-206.017 170.245z"/></svg>');
+        }
+
+        .register input[type="password"] {
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#242c37"><path d="M195.334 223.333h-50v-62.666c0-61.022 49.645-110.667 110.666-110.667 61.022 0 110.667 49.645 110.667 110.667v62.666h-50v-62.666c0-33.452-27.215-60.667-60.667-60.667-33.451 0-60.666 27.215-60.666 60.667v62.666zm208.666 30v208.667h-296v-208.667h296zm-121 87.667c0-14.912-12.088-27-27-27s-27 12.088-27 27c0 7.811 3.317 14.844 8.619 19.773 4.385 4.075 6.881 9.8 6.881 15.785v22.942h23v-22.941c0-5.989 2.494-11.708 6.881-15.785 5.302-4.93 8.619-11.963 8.619-19.774z"/></svg>');
+        }
+
+        .register button[type="submit"] {
+            background-image: linear-gradient(160deg, #8ceabb 0%, #378f7b 100%);
+            color: #fff;
+            margin-bottom: 2rem;
+            width: 100%;
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            border-radius: 999px;
+            font-size: 1rem;
+        }
+
+        .register button[type="submit"]:hover {
+            background-image: linear-gradient(160deg, #7cd4a7 0%, #2d7a69 100%);
+        }
+        
+        .error-message {
+            background-color: rgba(255, 76, 76, 0.15);
+            color: #ff4c4c;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="align">
+    <div class="grid">
+       
+        
+        <div class="register">
+            <h2>Inscription</h2>
+            
+            <div th:if="${message}" class="error-message" th:text="${message}"></div>
+            
+            <form th:action="@{/auth/register/superadmin}" method="post" class="form">
+                <div class="form__field">
+                    <input type="text" id="nom" name="nom" placeholder="Nom" required />
+                </div>
+                
+                <div class="form__field">
+                    <input type="email" id="email" name="email" placeholder="Email" required />
+                </div>
+                
+                <div class="form__field">
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required />
+                </div>
+                
+                <div class="form__field">
+                    <button type="submit">S'inscrire</button>
+                </div>
+                
+                <p>
+                    <a th:href="@{/auth/login/superadmin}">Déjà inscrit ? Se connecter</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
